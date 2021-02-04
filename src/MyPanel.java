@@ -69,6 +69,7 @@ public class MyPanel extends JPanel {
         addKeyListener(new MyKL());
         addMouseListener(new MyML());
         setFocusable(true);
+        setPreferredSize(new Dimension(Const.W, Const.H));
         hero = new Hero(0, 0);
         try {
             grass = ImageIO.read(new File("Images\\grass.jpg"));
