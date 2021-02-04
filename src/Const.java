@@ -1,5 +1,5 @@
 public class Const {
-    static int W = 800;
-    static int H = 600;
-    static int STEP = 50;
+    public static int W = 800;
+    public static int H = 600;
+    public static int STEP = 50;
 }

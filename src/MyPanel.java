@@ -14,7 +14,7 @@ public class MyPanel extends JPanel {
     Hero hero;
 
     boolean click = false;
-    int mx, my;
+    int mx, my, cx, cy;
 
     class MyKL implements KeyListener{
         @Override
@@ -36,16 +36,17 @@ public class MyPanel extends JPanel {
     class MyML implements MouseListener{
         @Override
         public void mouseClicked(MouseEvent e) {
-            mx = e.getX();
-            my = e.getY();
-            click = true;
-            repaint();
-            System.out.println("Clicked " + e.getX() + " " + e.getY());
         }
 
         @Override
         public void mousePressed(MouseEvent e) {
-            System.out.println("Pressed " + e.getX() + " " + e.getY());
+            mx = e.getX();
+            my = e.getY();
+            cx = mx / 50;
+            cy = my / 50;
+
+            click = true;
+            repaint();
         }
 
         @Override
@@ -94,7 +95,7 @@ public class MyPanel extends JPanel {
         hero.draw(g);
         if (click) {
             g.setColor(Color.RED);
-            g.fillOval(mx, my, Const.STEP, Const.STEP);
+            g.fillOval(cx * 50, cy*50, Const.STEP, Const.STEP);
             click = false;
         }
     }
