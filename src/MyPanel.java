@@ -8,13 +8,12 @@ import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class MyPanel extends JPanel {
     BufferedImage grass;
     Hero hero;
-
-    boolean click = false;
-    int mx, my, cx, cy;
+    ArrayList<Covid> covids;
 
     class MyKL implements KeyListener{
         @Override
@@ -40,12 +39,10 @@ public class MyPanel extends JPanel {
 
         @Override
         public void mousePressed(MouseEvent e) {
-            mx = e.getX();
-            my = e.getY();
-            cx = mx / 50;
-            cy = my / 50;
-
-            click = true;
+            int cx = e.getX() / Const.STEP;
+            int cy = e.getY() / Const.STEP;
+            covids.add(new Covid(cx * Const.STEP,
+                                 cy * Const.STEP));
             repaint();
         }
 
@@ -72,6 +69,7 @@ public class MyPanel extends JPanel {
         setFocusable(true);
         setPreferredSize(new Dimension(Const.W, Const.H));
         hero = new Hero(0, 0);
+        covids = new ArrayList<>();
         try {
             grass = ImageIO.read(new File("Images\\grass.jpg"));
         } catch (IOException e) {
@@ -79,10 +77,27 @@ public class MyPanel extends JPanel {
         }
     }
 
-    void stepLeft(){hero.stepX(-Const.STEP);}
-    void stepRight(){hero.stepX(Const.STEP);}
-    void stepUP(){hero.stepY(-Const.STEP);}
-    void stepDown(){hero.stepY(Const.STEP);}
+    void stepLeft(){
+        hero.stepX(-Const.STEP);
+    }
+    void stepRight(){
+        hero.stepX(Const.STEP);
+    }
+    void stepUP(){
+        hero.stepY(-Const.STEP);
+    }
+    void stepDown(){
+        hero.stepY(Const.STEP);
+    }
+
+    public void checkCollision(){
+        for (Covid covid: covids){
+            if (hero.collision(covid)) {
+                System.out.println("Game over");
+                setFocusable(false);
+            }
+        }
+    }
 
     @Override
     public void paintComponent(Graphics g) {
@@ -92,11 +107,9 @@ public class MyPanel extends JPanel {
                 g.drawImage(grass, xg, yg, null);
             }
         }
+        for (Covid covid: covids)
+            covid.draw(g);
         hero.draw(g);
-        if (click) {
-            g.setColor(Color.RED);
-            g.fillOval(cx * 50, cy*50, Const.STEP, Const.STEP);
-            click = false;
-        }
+        checkCollision();
     }
 }

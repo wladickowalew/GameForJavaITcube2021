@@ -6,6 +6,7 @@ public class Hero extends Model{
 
     public void stepX(int x){
         x += this.getX();
+        this.setX(x);
         if (x >= Const.W)
             this.setX(0);
         if (x < 0)
@@ -13,7 +14,8 @@ public class Hero extends Model{
     }
 
     public void stepY(int y){
-       y += this.getY();
+        y += this.getY();
+        this.setY(y);
         if (y >= Const.H)
             this.setY(0);
         if (y < 0)

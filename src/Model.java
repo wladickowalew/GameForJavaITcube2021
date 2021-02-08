@@ -37,4 +37,8 @@ abstract public class Model {
     public void setY(int y) {
         this.y = y;
     }
+
+    public boolean collision(Model other){
+        return this.x == other.x && this.y == other.y;
+    }
 }
