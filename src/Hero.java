@@ -19,6 +19,6 @@ public class Hero extends Model{
         if (y >= Const.H)
             this.setY(0);
         if (y < 0)
-            this.setX(Const.H - Const.STEP);
+            this.setY(Const.H - Const.STEP);
     }
 }

@@ -1,10 +1,7 @@
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -14,6 +11,7 @@ public class MyPanel extends JPanel {
     BufferedImage grass;
     Hero hero;
     ArrayList<Covid> covids;
+    Covid transferC;
 
     class MyKL implements KeyListener{
         @Override
@@ -41,14 +39,44 @@ public class MyPanel extends JPanel {
         public void mousePressed(MouseEvent e) {
             int cx = e.getX() / Const.STEP;
             int cy = e.getY() / Const.STEP;
-            covids.add(new Covid(cx * Const.STEP,
-                                 cy * Const.STEP));
+            if (e.getButton() == 2){
+                covids.add(new Covid(cx * Const.STEP,
+                                     cy * Const.STEP));
+            }
+            if (e.getButton() == 3){
+                cx = cx * Const.STEP;
+                cy = cy * Const.STEP;
+                Covid c = null;
+                for(Covid covid: covids) {
+                    if (covid.collision(cx, cy))
+                        c = covid;
+                }
+                if (c != null)
+                    covids.remove(c);
+            }
+            if(e.getButton() == 1){
+                cx = cx * Const.STEP;
+                cy = cy * Const.STEP;
+                for(Covid covid: covids) {
+                    if (covid.collision(cx, cy)) {
+                        transferC = covid;
+                        break;
+                    }
+                }
+            }
             repaint();
         }
 
         @Override
         public void mouseReleased(MouseEvent e) {
-            System.out.println("Released " + e.getX() + " " + e.getY());
+            if (transferC == null)
+                return;
+            int cx = e.getX() / Const.STEP;
+            int cy = e.getY() / Const.STEP;
+            transferC.setX(cx * Const.STEP);
+            transferC.setY(cy * Const.STEP);
+            transferC = null;
+            repaint();
         }
 
         @Override
@@ -62,10 +90,28 @@ public class MyPanel extends JPanel {
         }
     }
 
+    class MyMML implements MouseMotionListener{
+
+        @Override
+        public void mouseDragged(MouseEvent e) {
+            if (transferC == null)
+                return;
+            transferC.setX(e.getX());
+            transferC.setY(e.getY());
+            repaint();
+        }
+
+        @Override
+        public void mouseMoved(MouseEvent e) {
+
+        }
+    }
+
     public MyPanel(){
         setLayout(null);
         addKeyListener(new MyKL());
         addMouseListener(new MyML());
+        addMouseMotionListener(new MyMML());
         setFocusable(true);
         setPreferredSize(new Dimension(Const.W, Const.H));
         hero = new Hero(0, 0);

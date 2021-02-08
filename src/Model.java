@@ -39,6 +39,9 @@ abstract public class Model {
     }
 
     public boolean collision(Model other){
-        return this.x == other.x && this.y == other.y;
+        return collision(other.x, other.y);
+    }
+    public boolean collision(int x, int y){
+        return this.x == x && this.y == y;
     }
 }
